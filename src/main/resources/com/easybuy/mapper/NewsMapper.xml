@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybuy.mapper.NewsMapper">
+
+    <select id="getNews" resultType="news">
+        SELECT
+          *
+        FROM
+          `easybuy_news`
+    </select>
+
+    <select id="findNewsById" parameterType="integer" resultType="news">
+        SELECT
+          *
+        FROM
+          `easybuy_news`
+        WHERE id = #{id}
+    </select>
+
+      <select id="getNewsByPage" resultType="news" parameterType="integer" >
+        select * from `easybuy_news` limit #{from} , 10
+    </select>
+
+
+
+</mapper>

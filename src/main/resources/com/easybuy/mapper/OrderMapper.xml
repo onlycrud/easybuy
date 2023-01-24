@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybuy.mapper.OrderMapper">
+
+    <resultMap id="orderMap" type="order" >
+        <id column="id" property="id" />
+        <result column="createTime" property="createTime" />
+        <result column="cost" property="cost" />
+        <result column="serialNumber" property="serialNumber" />
+        <association property="user" column="userId" javaType="user" select="findUserById" />
+        <association property="userAddress" column="userAddress" javaType="userAddress" select="findAddressByAddress" />
+    </resultMap>
+
+    <select id="findAddressByAddress" parameterType="string" resultMap="com.easybuy.mapper.UserAddressMapper.userAddressMap"  >
+        select * from `easybuy_user_address` where address = #{userAddress}
+    </select>
+
+    <select id="findUserById" parameterType="integer" resultMap="com.easybuy.mapper.UserMapper.userMap" >
+        SELECT
+          *
+        FROM
+          `easybuy_user`
+        WHERE id = #{userId}
+    </select>
+
+
+    <insert id="insertOrder" parameterType="order" keyProperty="id" useGeneratedKeys="true" >
+        INSERT INTO `easybuy_order`
+        VALUES
+          (NULL, #{user.id} , #{user.loginName} , #{userAddress.address}, #{createTime} , #{cost} , #{serialNumber} )
+    </insert>
+
+    <insert id="insertOrderDetail" parameterType="orderDetail" >
+        INSERT INTO `easybuy_order_detail`
+        VALUES
+          (NULL , #{orderId} , #{productId} , #{quantity} , #{cost} )
+    </insert>
+
+    <select id="findOrderById" parameterType="integer" resultMap="orderMap">
+        select * from `easybuy_order` where id = #{id}
+    </select>
+
+
+</mapper>

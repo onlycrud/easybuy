@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybuy.mapper.ProductCategoryMapper">
+
+    <select id="getAll" resultType="productCategory">
+        select * from `easybuy_product_category`
+    </select>
+
+    <select id="getLevelOne" resultType="productCategory">
+        select * from `easybuy_product_category` where type = 1
+    </select>
+
+    <select id="getLevelTwo" resultType="productCategory">
+        select * from `easybuy_product_category` where type = 2
+    </select>
+
+    <select id="getLevelThree" resultType="productCategory">
+        select * from `easybuy_product_category` where type = 3
+    </select>
+
+    <select id="findById" parameterType="integer" resultType="productCategory">
+        select * from `easybuy_product_category` where categoryId = #{id}
+    </select>
+
+
+</mapper>

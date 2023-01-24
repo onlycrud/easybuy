@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybuy.mapper.ShoppingMapper">
+
+    <resultMap id="shoppingMap" type="shopping">
+        <id property="shoppingId" column="shoppingId"/>
+        <result property="productSum" column="productSum"/>
+        <association property="user" column="userId" javaType="user" select="findUserById" ></association>
+        <association property="product" column="productId" javaType="product" select="findProductById"></association>
+    </resultMap>
+
+    <select id="findUserById" resultType="user" parameterType="integer">
+        select * from easybuy_user where id = #{id}
+    </select>
+
+    <select id="findProductById" parameterType="integer" resultType="product">
+        select * from easybuy_product where id =#{id}
+    </select>
+
+    <select id="findShoppingByUser" parameterType="user" resultMap="shoppingMap">
+        select * from shopping where userId = #{id}
+    </select>
+
+    <select id="findCountByUser" resultType="integer" parameterType="user">
+        select count(0) from shopping where userId = #{id}
+    </select>
+
+    <select id="findTotalPriceByUser" parameterType="user" resultType="double">
+        SELECT
+          SUM(p.`price` * s.`productSum`)
+        FROM
+          `shopping` s
+          JOIN `easybuy_product` p
+            ON s.`productId` = p.`id`
+            WHERE s.`userId`= #{id}
+    </select>
+
+    <select id="findShoppingByUserAndProductId" resultMap="shoppingMap">
+        select * from shopping where userId = #{userId} and productId = #{productId}
+    </select>
+
+    <update id="updateShopping" parameterType="shopping">
+        update shopping set productSum = #{productSum} where userId = #{user.id} and productId = #{product.id}
+    </update>
+
+    <delete id="deleteShopping" parameterType="shopping">
+        delete from shopping where userId = #{user.id} and productId = #{product.id}
+    </delete>
+
+    <insert id="insertShopping" parameterType="shopping" >
+        insert into shopping values(null , #{user.id} , #{product.id} , #{productSum})
+    </insert>
+
+
+</mapper>

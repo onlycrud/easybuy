@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easybuy.mapper.UserMapper">
+
+    <resultMap id="userMap" type="user">
+        <id column="id" property="id" />
+        <result property="loginName" column="loginName" />
+        <result column="userName" property="userName" />
+        <result property="password" column="password" />
+        <result column="sex" property="sex" />
+        <result property="identityCode" column="identityCode" />
+        <result column="email" property="email" />
+        <result property="mobile" column="mobile" />
+        <result property="type" column="type" />
+        <collection property="shoppings" column="id"  select="findShoppingByUser" />
+    </resultMap>
+
+    <select id="findShoppingByUser" parameterType="integer" resultMap="com.easybuy.mapper.ShoppingMapper.shoppingMap">
+        select * from shopping where userId = #{id}
+    </select>
+
+    <select id="findUserByNameAndPwd" resultMap="userMap" parameterType="user" >
+        select * from easybuy_user where loginName = #{loginName} and password = #{password}
+    </select>
+
+    <select id="findUserByName" parameterType="string" resultType="user">
+        select * from easybuy_user where loginName = #{loginName}
+    </select>
+
+    <insert id="insertUser" parameterType="user" >
+        insert into easybuy_user values(null , #{loginName} , #{userName} , #{password} , 1, null , #{email} , #{mobile} , 0)
+    </insert>
+
+    <select id="findShoppingCountByUser" resultType="integer" parameterType="integer" >
+        SELECT
+          COUNT(0)
+        FROM
+          easybuy_user u
+          JOIN shopping s
+            ON u.id = s.userId
+            WHERE u.id = #{id}
+    </select>
+
+    <select id="getUserBalance" resultType="double" parameterType="user" >
+        select balance from  `easybuy_user_balance` where userId = #{id}
+    </select>
+
+</mapper>
